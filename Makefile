@@ -14,6 +14,6 @@ install:
 clean:
 	if [ -f ${BINARY} ] ; then rm ${BINARY} ; fi
 
-default: clean install
+default: install
 
-.PHONY: clean install
+.PHONY: build clean install
