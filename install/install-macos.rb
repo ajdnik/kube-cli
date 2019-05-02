@@ -193,7 +193,7 @@ end
 ohai "Downloading and installing Kube CLI..."
 Dir.chdir CLI_PREFIX do
   system "/bin/bash -o pipefail -c 'export TAG=$(/usr/bin/curl -fsSL #{CLI_URL} | /usr/bin/grep '\"tag_name\":' | /usr/bin/sed -E 's/.*\"([^\"]+)\".*/\1/') && /usr/bin/curl -fsSL --output bin/kube-cli.tar.gz https://github.com/ajdnik/kube-cli/releases/download/$TAG/kube-cli_darwin_amd64.tar.gz'"
-  system "/bin/bash -o pipefail -c '/uar/bin/tar -xf bin/kube-cli.tar.gz && rm bin/kube-cli.tar.gz'" 
+  system "/bin/bash -o pipefail -c '/usr/bin/tar -xf bin/kube-cli.tar.gz && /bin/rm bin/kube-cli.tar.gz'" 
   system "/bin/chmod", "755", "bin/kube-cli"
 end
 
