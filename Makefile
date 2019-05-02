@@ -1,5 +1,5 @@
 BINARY=kube-cli
-VERSION="0.1.3"
+VERSION="0.1.4"
 BUILD=`date +%FT%T%z`
 LDFLAGS=-ldflags "-X github.com/ajdnik/kube-cli/version.version=${VERSION} -X github.com/ajdnik/kube-cli/version.build=${BUILD}"
 
@@ -13,7 +13,7 @@ clean:
 	if [ -f ${BINARY} ] ; then rm ${BINARY} ; fi
 
 changelog:
-	git-chglog -c .chglog/changelog/config.yml -o CHANGELOG.md
+	git-chglog -c .chglog/changelog/config.yml -o CHANGELOG.md --next-tag ${VERSION} ..${VERSION}
 
 deps:
 	go get github.com/inconshreveable/mousetrap
