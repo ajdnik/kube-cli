@@ -16,3 +16,5 @@
 
 # Build files
 kube-cli
+build
+dist
