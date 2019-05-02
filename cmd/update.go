@@ -301,8 +301,8 @@ func getLatestRelease(info binaryInfo) (latestRelease, error) {
 		version: latestVersion,
 	}
 	appName := filepath.Base(info.path)
-	shaName := appName + "_" + latestVersion + "_" + info.os + "_" + info.arch + ".sha512"
-	tarName := appName + "_" + latestVersion + "_" + info.os + "_" + info.arch + ".tar.gz"
+	shaName := appName + "_" + info.os + "_" + info.arch + ".sha512"
+	tarName := appName + "_" + info.os + "_" + info.arch + ".tar.gz"
 	for _, asset := range assets {
 		a := asset.(map[string]interface{})
 		if _, ok := a["name"]; !ok {
