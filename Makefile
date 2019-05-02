@@ -1,8 +1,6 @@
 BINARY=kube-cli
-
 VERSION="0.1.2"
 BUILD=`date +%FT%T%z`
-
 LDFLAGS=-ldflags "-X github.com/ajdnik/kube-cli/version.version=${VERSION} -X github.com/ajdnik/kube-cli/version.build=${BUILD}"
 
 build:
@@ -43,14 +41,12 @@ dist: compile
 		echo $$f; \
 	done
 
-release: dist
-	@latest_tag=$$(git describe --tags `git rev-list --tags --max-count=1`); \
-	comparison="$$latest_tag..HEAD"; \
-	if [ -z "$$latest_tag" ]; then comparison=""; fi; \
-	git-chglog -c .chglog/release/config.yml -o RELEASE.md $$comparison \
-	changelog=$$(cat RELEASE.md); \
-	@rm RELEASE.md \
-	github-release ajdnik/$(BINARY) $(VERSION) "$$(git rev-parse --abbrev-ref HEAD)" "**Changelog**<br/>$$changelog" 'dist/*'; \
+release: dist changelog
+	git-chglog -c .chglog/release/config.yml -o RELEASE.md --next-tag ${VERSION} ${VERSION}; \
+	git add CHANGELOG.md; \
+	git commit -m "chore: updated changelog"; \
+	github-release ajdnik/$(BINARY) $(VERSION) "$$(git rev-parse --abbrev-ref HEAD)" "**Changelog**<br/>$(cat RELEASE.md)" 'dist/*'; \
+	@rm RELEASE.md; \
 	git pull
 
 default: install
