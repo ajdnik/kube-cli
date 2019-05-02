@@ -21,6 +21,7 @@ deps:
 	go get -u github.com/git-chglog/git-chglog/cmd/git-chglog
 	go get github.com/mitchellh/gox
 	go get github.com/c4milo/github-release
+	go get github.com/dustin/go-humanize
 
 compile:
 	@rm -rf build/
@@ -52,6 +53,6 @@ release: dist changelog
 	@rm RELEASE.md
 	git pull
 
-default: install
+default: build
 
 .PHONY: dist release changelog compile deps build clean install
