@@ -27,10 +27,9 @@ compile:
 	@rm -rf build/
 	@gox ${LDFLAGS} \
 	-osarch="darwin/amd64" \
-	-os="linux" \
-	-os="windows" \
-	-os="solaris" \
-	-output "build/{{.Dir}}_$(VERSION)_{{.OS}}_{{.Arch}}/$(BINARY)" \
+	-osarch="linux/amd64" \
+	-osarch="windows/amd64" \
+	-output "build/{{.Dir}}_{{.OS}}_{{.Arch}}/$(BINARY)" \
 	./...
 
 dist: compile
