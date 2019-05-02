@@ -42,9 +42,11 @@ dist: compile
 	done
 
 release: dist changelog
-	git-chglog -c .chglog/release/config.yml -o RELEASE.md --next-tag ${VERSION} ${VERSION}; \
 	git add CHANGELOG.md; \
 	git commit -m "chore: updated changelog"; \
+	git add Makefile; \
+	git commit -m "chore: version bumped"; \
+	git-chglog -c .chglog/release/config.yml -o RELEASE.md --next-tag ${VERSION} ${VERSION}; \
 	github-release ajdnik/$(BINARY) $(VERSION) "$$(git rev-parse --abbrev-ref HEAD)" "**Changelog**<br/>$(cat RELEASE.md)" 'dist/*'; \
 	@rm RELEASE.md; \
 	git pull
