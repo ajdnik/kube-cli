@@ -1,9 +1,24 @@
 
+<a name="0.1.6"></a>
+## [0.1.6](https://github.com/ajdnik/kube-cli/compare/0.1.5...0.1.6) (2019-05-02)
+
+### Feat
+
+* macos install script
+
+### Fix
+
+* no version number in release assets
+* reduced number of released platforms
+
+
 <a name="0.1.5"></a>
 ## [0.1.5](https://github.com/ajdnik/kube-cli/compare/0.1.4...0.1.5) (2019-05-02)
 
 ### Chore
 
+* version bumped
+* updated changelog
 * version.go header
 
 ### Feat
