@@ -174,7 +174,6 @@ wait_for_user if STDIN.tty? && !ENV["TRAVIS"]
 if File.directory? CLI_PREFIX
   sudo "/bin/chmod", "u+rwx", *chmods unless chmods.empty?
   sudo "/bin/chmod", "g+rwx", *group_chmods unless group_chmods.empty?
-  sudo "/bin/chmod", "755", *user_chmods unless user_chmods.empty?
   sudo "/usr/sbin/chown", ENV["USER"], *chowns unless chowns.empty?
   sudo "/usr/bin/chgrp", "admin", *chgrps unless chgrps.empty?
 else
