@@ -48,7 +48,7 @@ release: dist changelog
 	git commit -m "chore: version bumped"
 	git push
 	git-chglog -c .chglog/release/config.yml -o RELEASE.md --next-tag ${VERSION} ${VERSION}
-	github-release ajdnik/$(BINARY) $(VERSION) "$$(git rev-parse --abbrev-ref HEAD)" "**Changelog**<br/>$$(cat RELEASE.md)" 'dist/*'
+	github-release ajdnik/$(BINARY) $(VERSION) "$$(git rev-parse --abbrev-ref HEAD)" "## Changelog<br/>$$(cat RELEASE.md)" 'dist/*'
 	@rm RELEASE.md
 	git pull
 
