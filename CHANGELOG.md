@@ -1,19 +1,49 @@
 
+<a name="0.1.5"></a>
+## [0.1.5](https://github.com/ajdnik/kube-cli/compare/0.1.4...0.1.5) (2019-05-02)
+
+### Chore
+
+* version.go header
+
+### Feat
+
+* update command
+
+### Fix
+
+* build as default task
+* release title size
+* remove release.md after release
+
+
 <a name="0.1.4"></a>
-## [0.1.4](https://github.com/ajdnik/kube-cli/compare/0.1.2...0.1.4) (2019-05-02)
+## [0.1.4](https://github.com/ajdnik/kube-cli/compare/0.1.3...0.1.4) (2019-05-02)
 
 ### Chore
 
 * version bumped
 * updated changelog
+* version bumped
+* updated changelog
+
+### Fix
+
+* push commits on release
+* changelog cat
+
+
+<a name="0.1.3"></a>
+## [0.1.3](https://github.com/ajdnik/kube-cli/compare/0.1.2...0.1.3) (2019-05-02)
+
+### Chore
+
 * version commit
 * release tasks
 * git-chglog release config
 
 ### Fix
 
-* push commits on release
-* changelog cat
 * release task
 
 
