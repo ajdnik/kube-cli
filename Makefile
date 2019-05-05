@@ -22,6 +22,7 @@ deps:
 	go get github.com/mitchellh/gox
 	go get github.com/c4milo/github-release
 	go get github.com/dustin/go-humanize
+	go get github.com/janeczku/go-spinner
 
 compile:
 	@rm -rf build/
