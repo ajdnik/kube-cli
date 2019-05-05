@@ -23,6 +23,8 @@ deps:
 	go get github.com/c4milo/github-release
 	go get github.com/dustin/go-humanize
 	go get github.com/janeczku/go-spinner
+	go get github.com/denormal/go-gitignore
+	go get github.com/fatih/color
 
 compile:
 	@rm -rf build/
