@@ -25,6 +25,7 @@ deps:
 	go get github.com/janeczku/go-spinner
 	go get github.com/denormal/go-gitignore
 	go get github.com/fatih/color
+	go get gopkg.in/yaml.v2
 
 compile:
 	@rm -rf build/
