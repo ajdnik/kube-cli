@@ -22,10 +22,11 @@ deps:
 	go get github.com/mitchellh/gox
 	go get github.com/c4milo/github-release
 	go get github.com/dustin/go-humanize
-	go get github.com/janeczku/go-spinner
 	go get github.com/denormal/go-gitignore
 	go get github.com/fatih/color
 	go get gopkg.in/yaml.v2
+	go get -u cloud.google.com/go/storage
+	go get github.com/briandowns/spinner
 
 compile:
 	@rm -rf build/

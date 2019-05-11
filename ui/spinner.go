@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/briandowns/spinner"
 	"github.com/fatih/color"
-	spinner "github.com/janeczku/go-spinner"
 )
 
 var red = color.New(color.FgRed).SprintFunc()
@@ -14,9 +14,8 @@ var bold = color.New(color.Bold).SprintFunc()
 
 // ShowSpinner creates and starts a task spinner on StdOut.
 func ShowSpinner(step int8, descr string) *spinner.Spinner {
-	spin := spinner.NewSpinner(fmt.Sprintf("%v %v%v %v", bold("Step"), bold(step), bold(":"), descr))
-	spin.SetSpeed(100 * time.Millisecond)
-	spin.SetCharset([]string{"⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"})
+	spin := spinner.New(spinner.CharSets[14], 100*time.Millisecond)
+	spin.Suffix = fmt.Sprintf(" %v %v%v %v", bold("Step"), bold(step), bold(":"), descr)
 	spin.Start()
 	return spin
 }
@@ -36,4 +35,9 @@ func SpinnerSuccess(step int8, descr string, spin *spinner.Spinner) {
 // SuccessMessage prints out a success message to StdOut.
 func SuccessMessage(msg string) {
 	fmt.Println(fmt.Sprintf("%v %v", green("✓"), bold(msg)))
+}
+
+// FailMessage prints out a fail message to StdOut.
+func FailMessage(msg string) {
+	fmt.Println(fmt.Sprintf("%v %v", red("✖"), bold(msg)))
 }
