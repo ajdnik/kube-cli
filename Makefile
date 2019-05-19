@@ -27,6 +27,12 @@ deps:
 	go get gopkg.in/yaml.v2
 	go get -u cloud.google.com/go/storage
 	go get github.com/briandowns/spinner
+	go get -u google.golang.org/api/cloudbuild/v1
+	go get -u google.golang.org/api/container/v1
+	go get k8s.io/client-go/kubernetes
+	go get k8s.io/client-go/rest
+	go get k8s.io/api/apps/v1
+	go get k8s.io/apimachinery/pkg/apis/meta/v1
 
 compile:
 	@rm -rf build/

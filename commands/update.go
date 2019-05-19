@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/ajdnik/kube-cli/executable"
+	"github.com/ajdnik/kube-cli/filesystem"
 	"github.com/ajdnik/kube-cli/hash"
 	"github.com/ajdnik/kube-cli/tar"
 	"github.com/ajdnik/kube-cli/ui"
@@ -45,7 +46,7 @@ version from the web. Make sure you have an active web connection.`,
 		}
 		// Download tar.gz file
 		spin = ui.ShowSpinner(2, "Downloading CLI archive...")
-		tarTemp, err := createTempFile()
+		tarTemp, err := filesystem.CreateTemp()
 		if err != nil {
 			ui.SpinnerFail(2, "There was a problem downloading CLI archive.", spin)
 			return err
@@ -59,7 +60,7 @@ version from the web. Make sure you have an active web connection.`,
 		ui.SpinnerSuccess(2, fmt.Sprintf("Downloaded CLI archive %s.", humanize.Bytes(uint64(sz))), spin)
 		// Download SHA512 sum file
 		spin = ui.ShowSpinner(3, "Verifying downloaded archive...")
-		shaTemp, err := createTempFile()
+		shaTemp, err := filesystem.CreateTemp()
 		if err != nil {
 			ui.SpinnerFail(3, "There was a problem verifying the downloaded archive.", spin)
 			return err
@@ -98,18 +99,6 @@ version from the web. Make sure you have an active web connection.`,
 	},
 }
 
-// Exists reports whether the named file exists.
-func fileExists(name string) bool {
-	info, err := os.Stat(name)
-	if err != nil {
-		return false
-	}
-	if info.IsDir() {
-		return false
-	}
-	return true
-}
-
 func extractSum(path string) (string, error) {
 	var sum string
 	b, err := ioutil.ReadFile(path)
@@ -121,14 +110,4 @@ func extractSum(path string) (string, error) {
 		return sum, errors.New("sum extraction failed, invalid format")
 	}
 	return flds[0], nil
-}
-
-func createTempFile() (string, error) {
-	var name string
-	f, err := ioutil.TempFile(os.TempDir(), "kube-cli-")
-	if err != nil {
-		return name, err
-	}
-	name = f.Name()
-	return name, nil
 }

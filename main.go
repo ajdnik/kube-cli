@@ -20,6 +20,7 @@ container build, deployment configuration and container deployment steps.`,
 func main() {
 	cobra.OnInitialize()
 	root.AddCommand(commands.UpdateCommand)
+	root.AddCommand(commands.DeployCommand)
 	if err := root.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)

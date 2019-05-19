@@ -12,6 +12,28 @@ import (
 
 // Data represents the configuration structure of kubecli.yaml file.
 type Data struct {
+	Gke        GKEData
+	Docker     DockerData
+	Deployment DeploymentData
+}
+
+type GKEData struct {
+	Project string
+	Zone    string
+	Cluster string
+}
+
+type DockerData struct {
+	Name string
+}
+
+type DeploymentData struct {
+	Name      string
+	Namespace string
+	Container ContainerData
+}
+
+type ContainerData struct {
 	Name string
 }
 
