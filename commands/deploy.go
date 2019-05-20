@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -46,6 +47,12 @@ Docker image and deploying the image to a Kubernetes Deployment object.`,
 		ui.SpinnerSuccess(1, "Successfully read configuration for project.", spin)
 		// Compress root of project into .tar.gz
 		spin = ui.ShowSpinner(2, "Packing project into archive...")
+		dockerfile := filepath.Join(cwd, "Dockerfile")
+		if !filesystem.FileExists(dockerfile) {
+			ui.SpinnerFail(2, "There was a problem packing a project into archive.", spin)
+			ui.FailMessage("Couldn't find Dockerfile in the project root. Please add one.")
+			return errors.New("missing Dockerfile")
+		}
 		tarTemp, err := filesystem.CreateTemp()
 		if err != nil {
 			ui.SpinnerFail(2, "There was a problem packing a project into archive.", spin)
