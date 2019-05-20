@@ -18,8 +18,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// UpdateCommand is a Cobra command that updates the executable from
-// an online source.
+// UpdateCommand executes CLI update workflow, which downloads
+// latest CLI tool, verifies the download and replaces the old
+// binary.
 var UpdateCommand = &cobra.Command{
 	Use:   "update",
 	Short: "Update the command line tool",
@@ -27,12 +28,14 @@ var UpdateCommand = &cobra.Command{
 version from the web. Make sure you have an active web connection.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		spin := ui.ShowSpinner(1, "Retrieving latest version info...")
+		// Get CLI binary info
 		info, err := executable.GetInfo()
 		if err != nil {
 			ui.SpinnerFail(1, "There was a problem retrieving the latest version info.", spin)
 			ui.FailMessage("Please, retry 'kube-cli update' command.")
 			return err
 		}
+		// Retrieve latest version info
 		shaName := info.Name + "_" + info.OS + "_" + info.Arch + ".sha512"
 		tarName := info.Name + "_" + info.OS + "_" + info.Arch + ".tar.gz"
 		release, err := web.GetLatestRelease(shaName, tarName)
@@ -46,14 +49,15 @@ version from the web. Make sure you have an active web connection.`,
 			ui.SuccessMessage("The CLI tool is already updated to the latest version.")
 			return nil
 		}
-		// Download tar.gz file
 		spin = ui.ShowSpinner(2, "Downloading CLI archive...")
+		// Create temp file for downloaded archive
 		tarTemp, err := filesystem.CreateTemp()
 		if err != nil {
 			ui.SpinnerFail(2, "There was a problem downloading CLI archive.", spin)
 			ui.FailMessage("Please, retry 'kube-cli update' command as an administrator.")
 			return err
 		}
+		// Download latest CLI archive
 		sz, err := web.DownloadFile(tarTemp, release.TarURL)
 		if err != nil {
 			ui.SpinnerFail(2, "There was a problem downloading CLI archive.", spin)
@@ -64,12 +68,14 @@ version from the web. Make sure you have an active web connection.`,
 		ui.SpinnerSuccess(2, fmt.Sprintf("Downloaded CLI archive %s.", humanize.Bytes(uint64(sz))), spin)
 		// Download SHA512 sum file
 		spin = ui.ShowSpinner(3, "Verifying downloaded archive...")
+		// Create temp file for downloaded hash file
 		shaTemp, err := filesystem.CreateTemp()
 		if err != nil {
 			ui.SpinnerFail(3, "There was a problem verifying the downloaded archive.", spin)
 			ui.FailMessage("Please, retry 'kube-cli update' command as an administrator.")
 			return err
 		}
+		// Download archive hash
 		sz, err = web.DownloadFile(shaTemp, release.ShaURL)
 		if err != nil {
 			ui.SpinnerFail(3, "There was a problem verifying the downloaded archive.", spin)
@@ -77,20 +83,22 @@ version from the web. Make sure you have an active web connection.`,
 			return err
 		}
 		defer os.Remove(shaTemp)
-		// Verify SHA512 sum
-		downloadedSum, err := extractSum(shaTemp)
+		// Extract downloaded hash from file
+		dSum, err := extractSum(shaTemp)
 		if err != nil {
 			ui.SpinnerFail(3, "There was a problem verifying the downloaded archive.", spin)
 			ui.FailMessage("Please, retry 'kube-cli update' command.")
 			return err
 		}
-		computedSum, err := hash.Sum(tarTemp)
+		// Compute hash from downloaded archive
+		cSum, err := hash.Sum(tarTemp)
 		if err != nil {
 			ui.SpinnerFail(3, "There was a problem verifying the downloaded archive.", spin)
 			ui.FailMessage("Please, retry 'kube-cli update' command.")
 			return err
 		}
-		if downloadedSum != computedSum {
+		// Verify hash sums match
+		if dSum != cSum {
 			ui.SpinnerFail(3, "There was a problem verifying the downloaded archive.", spin)
 			ui.FailMessage("Please, retry 'kube-cli update' command. The downloaded archive was corrupt.")
 			return errors.New("update failed, SHA512 sum missmatch")
@@ -109,6 +117,7 @@ version from the web. Make sure you have an active web connection.`,
 	},
 }
 
+// Extract hash sum from a .sha512 file.
 func extractSum(path string) (string, error) {
 	var sum string
 	b, err := ioutil.ReadFile(path)

@@ -27,6 +27,7 @@ func Archive(files []string, arch string, base *string) error {
 	return nil
 }
 
+// Read file contents and add it to the archive.
 func addFile(tw *tar.Writer, path string, base *string) error {
 	file, err := os.Open(path)
 	if err != nil {
@@ -34,7 +35,7 @@ func addFile(tw *tar.Writer, path string, base *string) error {
 	}
 	defer file.Close()
 	if stat, err := file.Stat(); err == nil {
-		// now lets create the header as needed for this file within the tarball
+		// Create archive header for file
 		header := new(tar.Header)
 		header.Name = path
 		if base != nil {
@@ -47,11 +48,11 @@ func addFile(tw *tar.Writer, path string, base *string) error {
 		header.Size = stat.Size()
 		header.Mode = int64(stat.Mode())
 		header.ModTime = stat.ModTime()
-		// write the header to the tarball archive
+		// Write the header to the archive
 		if err := tw.WriteHeader(header); err != nil {
 			return err
 		}
-		// copy the file data to the tarball
+		// Copy file contents to the archive
 		if _, err := io.Copy(tw, file); err != nil {
 			return err
 		}

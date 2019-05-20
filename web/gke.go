@@ -17,7 +17,7 @@ type ClusterInfo struct {
 	Endpoint string
 }
 
-// GetGKECluster returns cluster config of a GKE.
+// GetGKECluster returns cluster config for a GKE cluster.
 func GetGKECluster(project, zone, name string) (ClusterInfo, error) {
 	var info ClusterInfo
 	ctx := context.Background()

@@ -18,7 +18,7 @@ type Info struct {
 	Version string
 }
 
-// GetInfo returns Info.
+// GetInfo returns executable info.
 func GetInfo() (Info, error) {
 	var info Info
 	path, err := os.Executable()

@@ -13,26 +13,36 @@ import (
 type BuildStatus int
 
 const (
+	// UnknownBuildStatus refers to an edge case wherein the status is unknown.
 	UnknownBuildStatus BuildStatus = iota
+	// QueuedBuildStatus means the build is waiting in the queue to be processed.
 	QueuedBuildStatus
+	// WorkingBuildStatus means the build is in progress.
 	WorkingBuildStatus
+	// SuccessBuildStatus means the build has completed successfully.
 	SuccessBuildStatus
+	// FailureBuildStatus means the build ended because of user failure.
 	FailureBuildStatus
+	// InternalErrorBuildStatus means the build ended because of an error in the build system.
 	InternalErrorBuildStatus
+	// TimeoutBuildStatus means the build ended because it ran too long.
 	TimeoutBuildStatus
+	// CanceledBuildStatus means the build ended because a user has canceled it.
 	CanceledBuildStatus
 )
 
+// BuildResult represents build info returned by build operations.
 type BuildResult struct {
-	Id     string
+	ID     string
 	Status BuildStatus
 	LogURL string
 }
 
+// GetBuild retrieves the latest build status for a given GCP Cloud Build.
 func GetBuild(project, id string) (BuildResult, error) {
 	res := BuildResult{
 		Status: UnknownBuildStatus,
-		Id:     id,
+		ID:     id,
 	}
 	ctx := context.Background()
 	svc, err := cloudbuild.NewService(ctx)
@@ -90,11 +100,12 @@ func CreateBuild(project, name, bucket, object string, tags []string) (BuildResu
 		return res, err
 	}
 	res.Status = toBuildStatus(meta.Build.Status)
-	res.Id = meta.Build.Id
+	res.ID = meta.Build.Id
 	res.LogURL = meta.Build.LogUrl
 	return res, nil
 }
 
+// Convert build status strings into a BuildStatus enum.
 func toBuildStatus(status string) BuildStatus {
 	switch status {
 	case "STATUS_UNKNOWN":
@@ -118,6 +129,7 @@ func toBuildStatus(status string) BuildStatus {
 	}
 }
 
+// Generates full GCP docker image names.
 func generateImageNames(project, name string, tags []string) []string {
 	var images []string
 	for _, tag := range tags {
@@ -126,6 +138,7 @@ func generateImageNames(project, name string, tags []string) []string {
 	return images
 }
 
+// Generates CloudBuild arguments for building docker images.
 func generateArgs(images []string) []string {
 	var args []string
 	args = append(args, "build")

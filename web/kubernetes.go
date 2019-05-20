@@ -5,12 +5,16 @@ import (
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
+
+	// Needed to add support for GCP authentication
 	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd/api"
 	"k8s.io/client-go/util/retry"
 )
 
+// UpdateDeployment updates a deployment object by adding a new docker image value
+// and triggering a rolling deployment in the process.
 func UpdateDeployment(namespace, name, container, docker string, info ClusterInfo) error {
 	client, err := kubernetes.NewForConfig(&rest.Config{
 		Host:     "https://" + info.Endpoint,

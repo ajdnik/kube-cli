@@ -17,22 +17,26 @@ type Data struct {
 	Deployment DeploymentData
 }
 
+// GKEData represents the gke subsection of the kubecli.yaml file.
 type GKEData struct {
 	Project string
 	Zone    string
 	Cluster string
 }
 
+// DockerData represents the docker subsection of the kubecli.yaml file.
 type DockerData struct {
 	Name string
 }
 
+// DeploymentData represents the deployment subsection of the kubecli.yaml file.
 type DeploymentData struct {
 	Name      string
 	Namespace string
 	Container ContainerData
 }
 
+// ContainerData represents the container subsection of the kubecli.yaml file.
 type ContainerData struct {
 	Name string
 }
