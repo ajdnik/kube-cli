@@ -47,7 +47,7 @@ Docker image and deploying the image to a Kubernetes Deployment object.`,
 		cfg, err := config.Read(cp)
 		if err != nil {
 			ui.SpinnerFail(1, "There was a problem reading configuration.", spin)
-			ui.FailMessage("Couldn't read kubecli YAML file. Try running 'kube-cli validate' to make sure the file is valid.")
+			ui.FailMessage("Couldn't read kubecli YAML file. Try running 'kube-cli lint' to make sure the file is valid.")
 			return err
 		}
 		ui.SpinnerSuccess(1, "Successfully read configuration for project.", spin)
