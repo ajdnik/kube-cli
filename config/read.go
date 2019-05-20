@@ -27,6 +27,7 @@ type GKEData struct {
 // DockerData represents the docker subsection of the kubecli.yaml file.
 type DockerData struct {
 	Name string
+	Tag  string
 }
 
 // DeploymentData represents the deployment subsection of the kubecli.yaml file.

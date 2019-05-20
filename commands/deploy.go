@@ -105,7 +105,7 @@ Docker image and deploying the image to a Kubernetes Deployment object.`,
 		spin = ui.ShowSpinner(4, "Building project...")
 		// Create build on GCP Cloud Build
 		tags := []string{
-			"test",
+			cfg.Docker.Tag,
 			timestamp,
 		}
 		bld, err := web.CreateBuild(cfg.Gke.Project, cfg.Docker.Name, bName, oName, tags)
