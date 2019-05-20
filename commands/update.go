@@ -30,6 +30,7 @@ version from the web. Make sure you have an active web connection.`,
 		info, err := executable.GetInfo()
 		if err != nil {
 			ui.SpinnerFail(1, "There was a problem retrieving the latest version info.", spin)
+			ui.FailMessage("Please, retry 'kube-cli update' command.")
 			return err
 		}
 		shaName := info.Name + "_" + info.OS + "_" + info.Arch + ".sha512"
@@ -37,6 +38,7 @@ version from the web. Make sure you have an active web connection.`,
 		release, err := web.GetLatestRelease(shaName, tarName)
 		if err != nil {
 			ui.SpinnerFail(1, "There was a problem retrieving the latest version info.", spin)
+			ui.FailMessage("Please, retry 'kube-cli update' command. Make sure you have an active internet connection.")
 			return err
 		}
 		ui.SpinnerSuccess(1, fmt.Sprintf("Retrieved latest version is %v.", release.Version), spin)
@@ -49,11 +51,13 @@ version from the web. Make sure you have an active web connection.`,
 		tarTemp, err := filesystem.CreateTemp()
 		if err != nil {
 			ui.SpinnerFail(2, "There was a problem downloading CLI archive.", spin)
+			ui.FailMessage("Please, retry 'kube-cli update' command as an administrator.")
 			return err
 		}
 		sz, err := web.DownloadFile(tarTemp, release.TarURL)
 		if err != nil {
 			ui.SpinnerFail(2, "There was a problem downloading CLI archive.", spin)
+			ui.FailMessage("Please, retry 'kube-cli update' command as an administrator.")
 			return err
 		}
 		defer os.Remove(tarTemp)
@@ -63,11 +67,13 @@ version from the web. Make sure you have an active web connection.`,
 		shaTemp, err := filesystem.CreateTemp()
 		if err != nil {
 			ui.SpinnerFail(3, "There was a problem verifying the downloaded archive.", spin)
+			ui.FailMessage("Please, retry 'kube-cli update' command as an administrator.")
 			return err
 		}
 		sz, err = web.DownloadFile(shaTemp, release.ShaURL)
 		if err != nil {
 			ui.SpinnerFail(3, "There was a problem verifying the downloaded archive.", spin)
+			ui.FailMessage("Please, retry 'kube-cli update' command as an administrator.")
 			return err
 		}
 		defer os.Remove(shaTemp)
@@ -75,15 +81,18 @@ version from the web. Make sure you have an active web connection.`,
 		downloadedSum, err := extractSum(shaTemp)
 		if err != nil {
 			ui.SpinnerFail(3, "There was a problem verifying the downloaded archive.", spin)
+			ui.FailMessage("Please, retry 'kube-cli update' command.")
 			return err
 		}
 		computedSum, err := hash.Sum(tarTemp)
 		if err != nil {
 			ui.SpinnerFail(3, "There was a problem verifying the downloaded archive.", spin)
+			ui.FailMessage("Please, retry 'kube-cli update' command.")
 			return err
 		}
 		if downloadedSum != computedSum {
 			ui.SpinnerFail(3, "There was a problem verifying the downloaded archive.", spin)
+			ui.FailMessage("Please, retry 'kube-cli update' command. The downloaded archive was corrupt.")
 			return errors.New("update failed, SHA512 sum missmatch")
 		}
 		ui.SpinnerSuccess(3, "Verified downloaded archive.", spin)
@@ -92,6 +101,7 @@ version from the web. Make sure you have an active web connection.`,
 		err = tar.Unarchive(tarTemp, filepath.Dir(info.Path))
 		if err != nil {
 			ui.SpinnerFail(4, "There was a problem updating CLI binaries.", spin)
+			ui.FailMessage("Please, retry 'kube-cli update' command as an administrator.")
 			return err
 		}
 		ui.SpinnerSuccess(4, fmt.Sprintf("Updated CLI binaries from %v to %v.", info.Version, release.Version), spin)

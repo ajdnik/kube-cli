@@ -31,6 +31,7 @@ Docker image and deploying the image to a Kubernetes Deployment object.`,
 		cwd, err := executable.GetCwd()
 		if err != nil {
 			ui.SpinnerFail(1, "There was a problem reading configuration.", spin)
+			ui.FailMessage("Please, retry 'kube-cli deploy' command.")
 			return err
 		}
 		configPath, err := config.GetPath(cwd)
@@ -42,6 +43,7 @@ Docker image and deploying the image to a Kubernetes Deployment object.`,
 		config, err := config.Read(configPath)
 		if err != nil {
 			ui.SpinnerFail(1, "There was a problem reading configuration.", spin)
+			ui.FailMessage("Couldn't read kubecli YAML file. Try running 'kube-cli validate' to make sure the file is valid.")
 			return err
 		}
 		ui.SpinnerSuccess(1, "Successfully read configuration for project.", spin)
@@ -56,6 +58,7 @@ Docker image and deploying the image to a Kubernetes Deployment object.`,
 		tarTemp, err := filesystem.CreateTemp()
 		if err != nil {
 			ui.SpinnerFail(2, "There was a problem packing a project into archive.", spin)
+			ui.FailMessage("Please, retry 'kube-cli deploy' command as an administrator.")
 			return err
 		}
 		defer os.Remove(tarTemp)
@@ -63,22 +66,26 @@ Docker image and deploying the image to a Kubernetes Deployment object.`,
 		projectFiles, err := filesystem.Glob(cwd)
 		if err != nil {
 			ui.SpinnerFail(2, "There was a problem packing a project into archive.", spin)
+			ui.FailMessage("Please, retry 'kube-cli deploy' command as an administrator.")
 			return err
 		}
 		filteredFiles, err := filterProjectFiles(projectFiles, cwd)
 		if err != nil {
 			ui.SpinnerFail(2, "There was a problem packing a project into archive.", spin)
+			ui.FailMessage("Please, retry 'kube-cli deploy' command as an administrator.")
 			return err
 		}
 		arTemp, err := filesystem.CreateTemp()
 		if err != nil {
 			ui.SpinnerFail(2, "There was a problem packing a project into archive.", spin)
+			ui.FailMessage("Please, retry 'kube-cli deploy' command as an administrator.")
 			return err
 		}
 		defer os.Remove(arTemp)
 		err = tar.Archive(filteredFiles, arTemp, &cwd)
 		if err != nil {
 			ui.SpinnerFail(2, "There was a problem packing a project into archive.", spin)
+			ui.FailMessage("Please, retry 'kube-cli deploy' command as an administrator.")
 			return err
 		}
 		ui.SpinnerSuccess(2, "Project packing successfull.", spin)
@@ -90,6 +97,7 @@ Docker image and deploying the image to a Kubernetes Deployment object.`,
 		sz, err := web.StorageUpload(bucketName, objectName, arTemp)
 		if err != nil {
 			ui.SpinnerFail(3, "There was a problem uploading archive.", spin)
+			ui.FailMessage("Please, retry 'kube-cli deploy'. Make sure you have an active internet connection and 'Storage Admin' permissions on GCP Service Account defined in GOOGLE_APPLICATION_CREDENTIALS.")
 			return err
 		}
 		ui.SpinnerSuccess(3, fmt.Sprintf("Uploaded archive %s.", humanize.Bytes(uint64(sz))), spin)
@@ -101,6 +109,7 @@ Docker image and deploying the image to a Kubernetes Deployment object.`,
 		bld, err := web.CreateBuild(config.Gke.Project, config.Docker.Name, bucketName, objectName, tags)
 		if err != nil {
 			ui.SpinnerFail(4, "There was a problem building the project.", spin)
+			ui.FailMessage("Please, retry 'kube-cli deploy'. Make sure you have an active internet connection and 'Cloud Build Service Account' permissions on GCP Service Account defined in GOOGLE_APPLICATION_CREDENTIALS.")
 			return err
 		}
 		running := true
@@ -109,6 +118,7 @@ Docker image and deploying the image to a Kubernetes Deployment object.`,
 			b, err := web.GetBuild(config.Gke.Project, bld.Id)
 			if err != nil {
 				ui.SpinnerFail(4, "There was a problem building the project.", spin)
+				ui.FailMessage("Please, retry 'kube-cli deploy'. Make sure you have an active internet connection and 'Cloud Build Service Account' permissions on GCP Service Account defined in GOOGLE_APPLICATION_CREDENTIALS.")
 				return err
 			}
 			if b.Status == web.SuccessBuildStatus {
@@ -121,6 +131,7 @@ Docker image and deploying the image to a Kubernetes Deployment object.`,
 				continue
 			}
 			ui.SpinnerFail(4, "There was a problem building the project.", spin)
+			ui.FailMessage(fmt.Sprintf("There was a problem building the project, fix the issue and rerun the command. More info available at %v.", b.LogURL))
 			return fmt.Errorf("visit %v to learn more", b.LogURL)
 		}
 		ui.SpinnerSuccess(4, "Building project succeeded.", spin)
@@ -128,12 +139,14 @@ Docker image and deploying the image to a Kubernetes Deployment object.`,
 		cls, err := web.GetGKECluster(config.Gke.Project, config.Gke.Zone, config.Gke.Cluster)
 		if err != nil {
 			ui.SpinnerFail(5, "There was a problem deploying the project.", spin)
+			ui.FailMessage("Please, retry 'kube-cli deploy'. Make sure you have an active internet connection and 'Kubernetes Engine Admin' permissions on GCP Service Account defined in GOOGLE_APPLICATION_CREDENTIALS.")
 			return err
 		}
 		dockerImage := fmt.Sprintf("gcr.io/%v/%v:%v", config.Gke.Project, config.Docker.Name, timestamp)
 		err = web.UpdateDeployment(config.Deployment.Namespace, config.Deployment.Name, config.Deployment.Container.Name, dockerImage, cls)
 		if err != nil {
 			ui.SpinnerFail(5, "There was a problem deploying the project.", spin)
+			ui.FailMessage("Please, retry 'kube-cli deploy'. Make sure you have an active internet connection and 'Kubernetes Engine Admin' permissions on GCP Service Account defined in GOOGLE_APPLICATION_CREDENTIALS.")
 			return err
 		}
 		ui.SpinnerSuccess(5, "Deploying project succeeded.", spin)

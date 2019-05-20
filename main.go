@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/ajdnik/kube-cli/commands"
@@ -14,7 +13,9 @@ var root = &cobra.Command{
 	Short: "Kubernetes deployment tool",
 	Long: `Kubernetes deployment tool simplifies the DevOps workflow by automating 
 container build, deployment configuration and container deployment steps.`,
-	Version: version.GetVersion(),
+	Version:       version.GetVersion(),
+	SilenceUsage:  true,
+	SilenceErrors: true,
 }
 
 func main() {
@@ -22,7 +23,6 @@ func main() {
 	root.AddCommand(commands.UpdateCommand)
 	root.AddCommand(commands.DeployCommand)
 	if err := root.Execute(); err != nil {
-		fmt.Println(err)
 		os.Exit(1)
 	}
 }
