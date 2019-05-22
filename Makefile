@@ -33,6 +33,7 @@ deps:
 	go get k8s.io/client-go/rest
 	go get k8s.io/api/apps/v1
 	go get k8s.io/apimachinery/pkg/apis/meta/v1
+	go get gopkg.in/AlecAivazis/survey.v1
 
 compile:
 	@rm -rf build/

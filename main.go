@@ -22,6 +22,7 @@ func main() {
 	cobra.OnInitialize()
 	root.AddCommand(commands.UpdateCommand)
 	root.AddCommand(commands.DeployCommand)
+	root.AddCommand(commands.InitCommand)
 	if err := root.Execute(); err != nil {
 		os.Exit(1)
 	}

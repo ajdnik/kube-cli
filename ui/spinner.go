@@ -31,13 +31,3 @@ func SpinnerSuccess(step int8, descr string, spin *spinner.Spinner) {
 	spin.Stop()
 	fmt.Println(fmt.Sprintf("%v %v %v%v %v", green("✓"), bold("Step"), bold(step), bold(":"), descr))
 }
-
-// SuccessMessage prints out a success message to StdOut.
-func SuccessMessage(msg string) {
-	fmt.Println(fmt.Sprintf("%v %v", green("✓"), bold(msg)))
-}
-
-// FailMessage prints out a fail message to StdOut.
-func FailMessage(msg string) {
-	fmt.Println(fmt.Sprintf("%v %v", red("✖"), bold(msg)))
-}
