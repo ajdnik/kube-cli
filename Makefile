@@ -1,5 +1,5 @@
 BINARY=kube-cli
-VERSION="0.1.6"
+VERSION="0.2.0"
 BUILD=`date +%FT%T%z`
 LDFLAGS=-ldflags "-X github.com/ajdnik/kube-cli/version.version=${VERSION} -X github.com/ajdnik/kube-cli/version.build=${BUILD}"
 
