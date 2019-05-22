@@ -23,6 +23,7 @@ func main() {
 	root.AddCommand(commands.UpdateCommand)
 	root.AddCommand(commands.DeployCommand)
 	root.AddCommand(commands.InitCommand)
+	root.AddCommand(commands.ValidateCommand)
 	if err := root.Execute(); err != nil {
 		os.Exit(1)
 	}

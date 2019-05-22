@@ -31,8 +31,7 @@ some questions.`,
 		// Verify Dockerfile exists in project root
 		df := filepath.Join(cwd, "Dockerfile")
 		if !filesystem.FileExists(df) {
-			ui.FailMessage("Couldn't find Dockerfile in the project root. See https://docs.docker.com/engine/reference/builder/ for further info.")
-			return errors.New("missing Dockerfile")
+			ui.WarnMessage("Couldn't find Dockerfile in the project root. See https://docs.docker.com/engine/reference/builder/ for further info.")
 		}
 		// Create new ignore file if user requests
 		ip := filepath.Join(cwd, ".kubecliignore")

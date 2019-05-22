@@ -47,7 +47,7 @@ Docker image and deploying the image to a Kubernetes Deployment object.`,
 		cfg, err := config.Read(cp)
 		if err != nil {
 			ui.SpinnerFail(1, "There was a problem reading configuration.", spin)
-			ui.FailMessage("Couldn't read kubecli YAML file. Try running 'kube-cli lint' to make sure the file is valid.")
+			ui.FailMessage("Couldn't read kubecli YAML file. Try running 'kube-cli validate' to make sure the file is valid.")
 			return err
 		}
 		ui.SpinnerSuccess(1, "Successfully read configuration for project.", spin)
@@ -56,7 +56,7 @@ Docker image and deploying the image to a Kubernetes Deployment object.`,
 		df := filepath.Join(cwd, "Dockerfile")
 		if !filesystem.FileExists(df) {
 			ui.SpinnerFail(2, "There was a problem packing a project into archive.", spin)
-			ui.FailMessage("Couldn't find Dockerfile in the project root. Please add one.")
+			ui.FailMessage("Couldn't find Dockerfile in the project root. See https://docs.docker.com/engine/reference/builder/ for further info.")
 			return errors.New("missing Dockerfile")
 		}
 		// Generate project files list
