@@ -86,6 +86,7 @@ var RollbackCommand = &cobra.Command{
 	},
 }
 
+// This function is only executed once after the package is imported.
 func init() {
-	RollbackCommand.Flags().BoolVarP(&asyncRollback, "async", "a", false, "Don't wait for rollback operation to complete")
+	RollbackCommand.Flags().BoolVarP(&asyncRollback, "async", "a", false, "don't wait for rollback operation to complete")
 }

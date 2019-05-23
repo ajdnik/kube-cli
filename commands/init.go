@@ -18,7 +18,7 @@ import (
 // commands to properly deploy the project to Kubernetes.
 var InitCommand = &cobra.Command{
 	Use:   "init",
-	Short: "Initialize the project",
+	Short: "Initialize the project config",
 	Long: `Initialize the project YAML config by answering
 some questions.`,
 	RunE: func(cmd *cobra.Command, args []string) error {

@@ -198,7 +198,7 @@ Docker image and deploying the image to a Kubernetes Deployment object.`,
 
 // This function is only executed once after the package is imported.
 func init() {
-	DeployCommand.Flags().BoolVarP(&asyncDeploy, "async", "a", false, "Don't wait for deploy operation to complete")
+	DeployCommand.Flags().BoolVarP(&asyncDeploy, "async", "a", false, "don't wait for deploy operation to complete")
 }
 
 // Filter files based on rules defined in .kubecliignore file.
