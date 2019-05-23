@@ -161,7 +161,7 @@ Docker image and deploying the image to a Kubernetes Deployment object.`,
 		if err != nil {
 			ui.SpinnerFail(5, "There was a problem deploying the project.", spin)
 			if err.Error() == fmt.Sprintf("deployments.apps \"%v\" not found", cfg.Deployment.Name) {
-				ui.FailMessage(fmt.Sprintf("Couldn't find deployment '%v' in cluster '%v'. Make sure you've created a deployment beforehand and rerun the command.", cfg.Deployment.Name, cfg.Gke.Cluster))
+				ui.FailMessage(fmt.Sprintf("Couldn't find deployment '%v' in '%v' namespace in cluster '%v'. Make sure you've created a deployment beforehand and rerun the command.", cfg.Deployment.Name, cfg.Deployment.Namespace, cfg.Gke.Cluster))
 				return err
 			}
 			ui.FailMessage("Please, retry 'kube-cli deploy'. Make sure you have an active internet connection and 'Kubernetes Engine Admin' permissions on GCP Service Account defined in GOOGLE_APPLICATION_CREDENTIALS.")
