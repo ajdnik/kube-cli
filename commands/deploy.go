@@ -117,6 +117,7 @@ Docker image and deploying the image to a Kubernetes Deployment object.`,
 		// Periodically check on build status
 		running := true
 		timeout := 1
+		maxTimeout := 60
 		for running {
 			b, err := web.GetBuild(cfg.Gke.Project, bld.ID)
 			if err != nil {
@@ -132,6 +133,9 @@ Docker image and deploying the image to a Kubernetes Deployment object.`,
 			// The build is still running or waiting to be run
 			if b.Status == web.QueuedBuildStatus || b.Status == web.WorkingBuildStatus {
 				timeout *= 2
+				if timeout > maxTimeout {
+					timeout = maxTimeout
+				}
 				time.Sleep(time.Duration(timeout) * time.Second)
 				continue
 			}

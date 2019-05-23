@@ -3,6 +3,7 @@ package web
 import (
 	"fmt"
 
+	"k8s.io/api/extensions/v1beta1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 
@@ -52,6 +53,59 @@ func UpdateDeployment(namespace, name, container, docker string, info ClusterInf
 		}
 		_, err = client.AppsV1().Deployments(namespace).Update(res)
 		return err
+	})
+	return err
+}
+
+// UnavailableReplicas returns the number of unavailable deployment instances for a given deployment.
+func UnavailableReplicas(namespace, name string, info ClusterInfo) (int32, error) {
+	client, err := kubernetes.NewForConfig(&rest.Config{
+		Host:     "https://" + info.Endpoint,
+		Username: info.Username,
+		Password: info.Password,
+		AuthProvider: &api.AuthProviderConfig{
+			Name: "gcp",
+		},
+		TLSClientConfig: rest.TLSClientConfig{
+			Insecure: false,
+			CertData: info.CertData,
+			CAData:   info.CAData,
+			KeyData:  info.KeyData,
+		},
+	})
+	if err != nil {
+		return -1, err
+	}
+	res, err := client.AppsV1().Deployments(namespace).Get(name, metav1.GetOptions{})
+	if err != nil {
+		return -1, err
+	}
+	return res.Status.UnavailableReplicas, nil
+}
+
+// RollbackDeployment reverts the deployment back to its previous state.
+func RollbackDeployment(namespace, name string, info ClusterInfo) error {
+	client, err := kubernetes.NewForConfig(&rest.Config{
+		Host:     "https://" + info.Endpoint,
+		Username: info.Username,
+		Password: info.Password,
+		AuthProvider: &api.AuthProviderConfig{
+			Name: "gcp",
+		},
+		TLSClientConfig: rest.TLSClientConfig{
+			Insecure: false,
+			CertData: info.CertData,
+			CAData:   info.CAData,
+			KeyData:  info.KeyData,
+		},
+	})
+	if err != nil {
+		return err
+	}
+	err = retry.RetryOnConflict(retry.DefaultRetry, func() error {
+		return client.ExtensionsV1beta1().Deployments(namespace).Rollback(&v1beta1.DeploymentRollback{
+			Name: name,
+		})
 	})
 	return err
 }

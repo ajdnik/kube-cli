@@ -24,6 +24,7 @@ func main() {
 	root.AddCommand(commands.DeployCommand)
 	root.AddCommand(commands.InitCommand)
 	root.AddCommand(commands.ValidateCommand)
+	root.AddCommand(commands.RollbackCommand)
 	if err := root.Execute(); err != nil {
 		os.Exit(1)
 	}
