@@ -1,9 +1,27 @@
 
+<a name="0.3.0"></a>
+## [0.3.0](https://github.com/ajdnik/kube-cli/compare/0.2.0...0.3.0) (2019-05-23)
+
+### Feat
+
+* **deploy:** detect missing deployment
+* **deploy:** async flag
+* **rollback:** rollback command
+* **validate:** validate command
+
+### Fix
+
+* cli descriptions
+* **deploy:** better missing deployment error message
+
+
 <a name="0.2.0"></a>
 ## [0.2.0](https://github.com/ajdnik/kube-cli/compare/0.1.6...0.2.0) (2019-05-22)
 
 ### Chore
 
+* version bumped
+* updated changelog
 * descriptive readme
 * code comments
 * **readme:** macos install command
