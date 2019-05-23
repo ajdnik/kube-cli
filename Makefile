@@ -1,7 +1,7 @@
 BINARY=kube-cli
 VERSION="0.3.0"
 BUILD=`date +%FT%T%z`
-LDFLAGS=-ldflags "-X github.com/ajdnik/kube-cli/version.version=${VERSION} -X github.com/ajdnik/kube-cli/version.build=${BUILD}"
+LDFLAGS=-ldflags "-s -w -X github.com/ajdnik/kube-cli/version.version=${VERSION} -X github.com/ajdnik/kube-cli/version.build=${BUILD}"
 
 build:
 	go build ${LDFLAGS} -o ${BINARY}
