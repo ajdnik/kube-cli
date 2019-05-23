@@ -19,6 +19,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var asyncDeploy bool
+
 // DeployCommand executes a multi step workflow that builds the
 // project using GCP Cloud Build and than deploys the docker image
 // to a GKE deployment.
@@ -161,9 +163,38 @@ Docker image and deploying the image to a Kubernetes Deployment object.`,
 			ui.FailMessage("Please, retry 'kube-cli deploy'. Make sure you have an active internet connection and 'Kubernetes Engine Admin' permissions on GCP Service Account defined in GOOGLE_APPLICATION_CREDENTIALS.")
 			return err
 		}
+		if asyncDeploy {
+			ui.SpinnerSuccess(5, "Successfully started the rolling deployment. You can keep track of the progress at https://console.cloud.google.com/kubernetes/workload.", spin)
+			return nil
+		}
+		// Periodically check deployment
+		running = true
+		timeout = 1
+		for running {
+			cnt, err := web.UnavailableReplicas(cfg.Deployment.Namespace, cfg.Deployment.Name, cls)
+			if err != nil {
+				ui.SpinnerFail(5, "There was a problem deploying the project.", spin)
+				ui.FailMessage("Something unexpected happened. Please check on the status of the deployment on the Google Cloud Console https://console.cloud.google.com/kubernetes/workload.")
+				return err
+			}
+			if cnt == 0 {
+				running = false
+				break
+			}
+			timeout *= 2
+			if timeout > maxTimeout {
+				timeout = maxTimeout
+			}
+			time.Sleep(time.Duration(timeout) * time.Second)
+		}
 		ui.SpinnerSuccess(5, "Deploying project succeeded.", spin)
 		return nil
 	},
+}
+
+// This function is only executed once after the package is imported.
+func init() {
+	DeployCommand.Flags().BoolVarP(&asyncDeploy, "async", "a", false, "Don't wait for deploy operation to complete")
 }
 
 // Filter files based on rules defined in .kubecliignore file.
